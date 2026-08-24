@@ -1,11 +1,7 @@
-// The Boat Fund — starting values.
-// Edit these and reload the page to change the plan's starting point.
-//
-// NOTE: once you use the on-screen "gear" editor at least once, your changes
-// are saved in the browser (localStorage) and will take priority over this
-// file from then on. To make this file the source of truth again, clear
-// this site's storage in your browser (or open the dashboard in a fresh
-// browser/profile).
+// The Boat Fund — all dashboard data lives here.
+// Edit these values (including the "entries" list below) and reload the
+// page to update the dashboard. There is no in-page editor; this file is
+// the only source of data.
 
 window.BOAT_CONFIG = {
   // Total amount you're saving toward, in GBP.
@@ -14,16 +10,17 @@ window.BOAT_CONFIG = {
   // How much you'd already saved before you started logging months here.
   startBalance: 6000,
 
-  // The month you're aiming to hit the target by, format "YYYY-MM".
-  targetDate: "2028-12",
+  // The month you started this savings plan, format "YYYY-MM".
+  // Used to calculate the "Time to departure" progress figure.
+  planStart: "2026-08",
 
-  // Short name for the destination, shown as "<label> ★".
-  label: "The boat",
+  // The month you're aiming to hit the target by / depart, format "YYYY-MM".
+  targetDate: "2028-12",
 
   // Subtitle shown under the title.
   subtitle: "Raising children on the edge of the world",
 
-  // Optional: pre-fill some months of savings.
+  // Monthly savings log — the only way to add data (no in-page editor).
   // Each entry is { ym: "YYYY-MM", amount: <number in GBP> }.
   entries: [
     { ym: "2026-06", amount: 1000 },
