@@ -59,7 +59,7 @@
 
   /* ---- stats band ---- */
   .band{position:relative;z-index:5;display:flex;gap:clamp(12px,2.5vw,56px);
-    padding:0 var(--pad) var(--pad);flex-wrap:wrap}
+    padding:10px var(--pad) var(--pad);flex-wrap:wrap;background:rgba(6,23,31,.55)}
   .stat{display:flex;flex-direction:column}
   .stat .k{font-size:clamp(10px,.95vw,13px);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600}
   .stat .v{font-size:clamp(20px,2.5vw,40px);font-weight:700;margin-top:.15em;font-variant-numeric:tabular-nums}
@@ -68,6 +68,14 @@
 
   .empty{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px}
   .empty p{font-family:Georgia,serif;font-style:italic;color:var(--muted);font-size:clamp(16px,2vw,26px)}
+
+  /* ---- ROUTE (second page) ---- */
+  #viewRoute{background:var(--abyss);padding:clamp(8px,1.4vh,14px) var(--pad) 0;display:flex;flex-direction:column}
+  .routeHead{flex:none;margin-bottom:clamp(4px,.8vh,10px);display:flex;align-items:baseline;gap:.7em}
+  .routeHead h2{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:normal;
+    color:var(--foam);font-size:clamp(13px,1.3vw,18px)}
+  .routeMapWrap{flex:1;min-height:0;position:relative;border-radius:10px;overflow:hidden}
+  #routeSvg{display:block;width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -102,6 +110,17 @@
         <p>Every voyage starts at the dock.<br>Add a month's savings to config.js to set sail.</p>
       </div>
     </section>
+
+    <!-- ROUTE -->
+    <section class="view" id="viewRoute">
+      <div class="routeHead">
+        <span class="eyebrow">The route</span>
+        <h2>Mediterranean to the Cook Islands — a four-year passage</h2>
+      </div>
+      <div class="routeMapWrap">
+        <svg id="routeSvg"></svg>
+      </div>
+    </section>
   </div>
 
   <div class="band" id="band">
@@ -115,6 +134,11 @@
 </div>
 
 <script src="config.js"></script>
+<script src="vendor/d3.v7.min.js"></script>
+<script src="vendor/topojson-client.min.js"></script>
+<script src="vendor/land-110m.js"></script>
+<script src="route-data.js"></script>
+<script src="route-map.js"></script>
 <script>
 (function(){
   "use strict";
@@ -178,14 +202,27 @@
     // the commented-out .band markup above) until the savings routine settles in.
   }
 
+  // ---- page rotation: dashboard <-> route map, every 60s ----
+  var views = [document.getElementById("viewTide"), document.getElementById("viewRoute")];
+  var activeView = 0;
+  function showView(i){
+    activeView = i;
+    views.forEach(function(el, idx){ el.classList.toggle("active", idx === i); });
+  }
+  setInterval(function(){ showView(activeView === 0 ? 1 : 0); }, 60000);
+
   // ---- wire up ----
   // double-tap anywhere on the readout toggles fullscreen (handy when mirroring)
   document.getElementById("views").addEventListener("dblclick",function(){
     if(!document.fullscreenElement){ (document.documentElement.requestFullscreen||function(){})(); }
     else if(document.exitFullscreen){ document.exitFullscreen(); }
   });
+  window.addEventListener("resize", function(){
+    if(window.drawRouteMap) window.drawRouteMap("#routeSvg", {compact:true});
+  });
 
   render();
+  if(window.drawRouteMap) window.drawRouteMap("#routeSvg", {compact:true});
 })();
 </script>
 </body>
